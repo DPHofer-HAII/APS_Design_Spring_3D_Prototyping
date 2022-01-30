@@ -10,25 +10,41 @@ public class Let_There_Be_Prefabs : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        prefab_count = GameObject.FindGameObjectsWithTag("PROTOTYPE_X").Length;
-        if (prefab_count > 1 && Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.E))
         {
-            // Destroy the second PROTOTYPE_X
+            if (GameObject.FindGameObjectsWithTag("PROTOTYPE_X").Length == 2)
+            {
+                // Destroy the second PROTOTYPE_X_2
+                var losPrefabos = GameObject.Find("PROTOTYPE_X_2");
+                losPrefabos.GetComponent<Rigidbody>().useGravity = true;
+                losPrefabos.GetComponent<Rigidbody>().AddForce(Vector3.left * 15);
+                losPrefabos.GetComponent<AudioSource>().Play();
+                Invoke("thePrefabIsDeadLongLiveThePrefab", 4);
+
+
+            }
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void thePrefabIsDeadLongLiveThePrefab()
     {
-        prefab_count = GameObject.FindGameObjectsWithTag("PROTOTYPE_X").Length;
-        if(prefab_count > 1)
+        Destroy(GameObject.Find("PROTOTYPE_X_2"));
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        
+        if(GameObject.FindGameObjectsWithTag("PROTOTYPE_X").Length == 1)
         {
-            Instantiate(datPrefab, new Vector3(2, 3, 3), Quaternion.identity);
+            var newPrefab = Instantiate(datPrefab, new Vector3(2, 3, 3), Quaternion.identity);
+            newPrefab.name = "PROTOTYPE_X_2";
+            Debug.Log("Initiated Prefab Gurrrrl");
         }
     }
 }
